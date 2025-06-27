@@ -1,0 +1,686 @@
+{
+  "testUsers": [
+    {
+      "id": "user-001",
+      "profile": {
+        "firstName": "Alice",
+        "lastName": "Johnson",
+        "email": "alice.johnson@example.com",
+        "phone": "555-0101",
+        "address": "123 Main Street",
+        "city": "New York",
+        "state": "NY",
+        "zipCode": "10001"
+      },
+      "preferences": {
+        "newsletter": true,
+        "notifications": false,
+        "language": "en",
+        "currency": "USD"
+      },
+      "testScenarios": ["basic-user", "form-validation", "profile-updates"]
+    },
+    {
+      "id": "user-002", 
+      "profile": {
+        "firstName": "Robert",
+        "lastName": "Smith",
+        "email": "robert.smith@example.com",
+        "phone": "555-0202",
+        "address": "456 Oak Avenue",
+        "city": "Los Angeles",
+        "state": "CA",
+        "zipCode": "90210"
+      },
+      "preferences": {
+        "newsletter": false,
+        "notifications": true,
+        "language": "en",
+        "currency": "USD"
+      },
+      "testScenarios": ["power-user", "complex-forms", "error-handling"]
+    },
+    {
+      "id": "user-003",
+      "profile": {
+        "firstName": "Maria",
+        "lastName": "Garcia",
+        "email": "maria.garcia@example.com", 
+        "phone": "555-0303",
+        "address": "789 Pine Road",
+        "city": "Chicago",
+        "state": "IL",
+        "zipCode": "60601"
+      },
+      "preferences": {
+        "newsletter": true,
+        "notifications": true,
+        "language": "es",
+        "currency": "USD"
+      },
+      "testScenarios": ["international-user", "accessibility", "multi-language"]
+    }
+  ],
+  
+  "testProducts": [
+    {
+      "id": "prod-001",
+      "name": "AI-Enhanced Laptop",
+      "category": "electronics",
+      "price": 1299.99,
+      "originalPrice": 1499.99,
+      "discount": 13,
+      "rating": 4.7,
+      "reviews": 156,
+      "inStock": true,
+      "variants": ["16GB RAM", "32GB RAM", "64GB RAM"],
+      "features": ["AI Processing", "Long Battery", "4K Display"],
+      "testScenarios": ["high-value-purchase", "variant-selection", "review-system"]
+    },
+    {
+      "id": "prod-002", 
+      "name": "Smart Wireless Headphones",
+      "category": "electronics",
+      "price": 249.99,
+      "originalPrice": 299.99,
+      "discount": 17,
+      "rating": 4.5,
+      "reviews": 89,
+      "inStock": true,
+      "variants": ["Black", "White", "Blue"],
+      "features": ["Noise Cancellation", "25h Battery", "Quick Charge"],
+      "testScenarios": ["color-selection", "comparison-shopping", "audio-preview"]
+    },
+    {
+      "id": "prod-003",
+      "name": "Ergonomic Office Chair", 
+      "category": "furniture",
+      "price": 399.99,
+      "originalPrice": 499.99,
+      "discount": 20,
+      "rating": 4.3,
+      "reviews": 234,
+      "inStock": false,
+      "variants": ["Standard", "Tall", "Petite"],
+      "features": ["Lumbar Support", "Adjustable Arms", "Mesh Back"],
+      "testScenarios": ["out-of-stock", "size-selection", "bulk-ordering"]
+    },
+    {
+      "id": "prod-004",
+      "name": "Professional Camera",
+      "category": "electronics", 
+      "price": 899.99,
+      "originalPrice": 999.99,
+      "discount": 10,
+      "rating": 4.8,
+      "reviews": 67,
+      "inStock": true,
+      "variants": ["Body Only", "With Lens", "Pro Kit"],
+      "features": ["4K Video", "Image Stabilization", "Weather Sealed"],
+      "testScenarios": ["professional-equipment", "bundle-options", "technical-specs"]
+    }
+  ],
+
+  "shoppingScenarios": [
+    {
+      "id": "scenario-basic-purchase",
+      "name": "Basic Purchase Flow",
+      "description": "Simple product selection and checkout",
+      "steps": [
+        {
+          "action": "navigate",
+          "target": "products-page",
+          "expectedResult": "products-grid-visible"
+        },
+        {
+          "action": "filter",
+          "target": "electronics-category",
+          "expectedResult": "filtered-products-displayed"
+        },
+        {
+          "action": "select-product",
+          "target": "prod-001",
+          "expectedResult": "product-details-shown"
+        },
+        {
+          "action": "add-to-cart",
+          "target": "add-cart-button",
+          "expectedResult": "cart-count-updated"
+        },
+        {
+          "action": "proceed-checkout",
+          "target": "checkout-button",
+          "expectedResult": "checkout-modal-displayed"
+        }
+      ],
+      "expectedDuration": "30-45 seconds",
+      "aiCapabilities": ["smart-navigation", "form-filling", "error-recovery"]
+    },
+    {
+      "id": "scenario-comparison-shopping",
+      "name": "Product Comparison Shopping",
+      "description": "Compare multiple products before purchase",
+      "steps": [
+        {
+          "action": "search",
+          "target": "headphones",
+          "expectedResult": "search-results-displayed"
+        },
+        {
+          "action": "compare-products",
+          "target": ["prod-002", "prod-001"],
+          "expectedResult": "comparison-view-active"
+        },
+        {
+          "action": "read-reviews",
+          "target": "reviews-section",
+          "expectedResult": "reviews-expanded"
+        },
+        {
+          "action": "select-preferred",
+          "target": "prod-002",
+          "expectedResult": "product-selected"
+        },
+        {
+          "action": "customize-options",
+          "target": "variant-selection",
+          "expectedResult": "options-configured"
+        }
+      ],
+      "expectedDuration": "60-90 seconds",
+      "aiCapabilities": ["content-understanding", "preference-learning", "smart-recommendations"]
+    },
+    {
+      "id": "scenario-cart-management",
+      "name": "Shopping Cart Management",
+      "description": "Add, modify, and manage cart items",
+      "steps": [
+        {
+          "action": "add-multiple-items",
+          "target": ["prod-001", "prod-002", "prod-004"],
+          "expectedResult": "cart-populated"
+        },
+        {
+          "action": "modify-quantities",
+          "target": "quantity-controls",
+          "expectedResult": "quantities-updated"
+        },
+        {
+          "action": "apply-coupon",
+          "target": "coupon-code-field",
+          "expectedResult": "discount-applied"
+        },
+        {
+          "action": "remove-item",
+          "target": "remove-button",
+          "expectedResult": "item-removed"
+        },
+        {
+          "action": "calculate-shipping",
+          "target": "shipping-calculator",
+          "expectedResult": "shipping-cost-displayed"
+        }
+      ],
+      "expectedDuration": "45-60 seconds",
+      "aiCapabilities": ["dynamic-content-handling", "calculation-verification", "state-management"]
+    }
+  ],
+
+  "formTestData": [
+    {
+      "scenario": "profile-completion",
+      "validData": {
+        "firstName": "John",
+        "lastName": "Doe",
+        "email": "john.doe@example.com",
+        "phone": "555-123-4567",
+        "address": "123 Main Street",
+        "city": "New York",
+        "state": "NY",
+        "zipCode": "10001",
+        "newsletter": true,
+        "notifications": false
+      },
+      "invalidData": {
+        "firstName": "",
+        "lastName": "D",
+        "email": "invalid-email",
+        "phone": "123",
+        "zipCode": "invalid",
+        "newsletter": "maybe"
+      },
+      "edgeCases": {
+        "firstName": "Jean-Pierre François-Marie",
+        "lastName": "O'Connor-Smith",
+        "email": "test+tag@domain-name.co.uk",
+        "phone": "+1 (555) 123-4567 ext. 890",
+        "address": "123½ Main St., Apt. #456",
+        "city": "San José",
+        "zipCode": "12345-6789"
+      }
+    },
+    {
+      "scenario": "registration-form",
+      "validData": {
+        "firstName": "Alice",
+        "lastName": "Johnson",
+        "email": "alice.johnson@company.com",
+        "password": "SecurePass123!",
+        "confirmPassword": "SecurePass123!",
+        "terms": true,
+        "marketing": false
+      },
+      "invalidData": {
+        "firstName": "",
+        "email": "duplicate@example.com",
+        "password": "weak",
+        "confirmPassword": "different",
+        "terms": false
+      },
+      "securityTests": {
+        "email": "test@domain.com'; DROP TABLE users; --",
+        "password": "<script>alert('xss')</script>",
+        "firstName": "' OR '1'='1",
+        "lastName": "Robert'; UPDATE users SET admin=1; --"
+      }
+    },
+    {
+      "scenario": "checkout-form",
+      "validData": {
+        "billingAddress": {
+          "firstName": "Jane",
+          "lastName": "Smith",
+          "address": "456 Oak Avenue",
+          "city": "Los Angeles",
+          "state": "CA",
+          "zipCode": "90210",
+          "country": "United States"
+        },
+        "shippingAddress": {
+          "sameAsBilling": false,
+          "firstName": "Jane",
+          "lastName": "Smith",
+          "address": "789 Pine Road",
+          "city": "San Francisco",
+          "state": "CA",
+          "zipCode": "94102",
+          "country": "United States"
+        },
+        "paymentMethod": {
+          "type": "credit-card",
+          "cardNumber": "4111111111111111",
+          "expiryMonth": "12",
+          "expiryYear": "2025",
+          "cvv": "123",
+          "nameOnCard": "Jane Smith"
+        }
+      },
+      "internationalData": {
+        "billingAddress": {
+          "firstName": "Hans",
+          "lastName": "Müller",
+          "address": "Musterstraße 123",
+          "city": "Berlin", 
+          "postalCode": "10115",
+          "country": "Germany"
+        },
+        "paymentMethod": {
+          "type": "bank-transfer",
+          "iban": "DE89370400440532013000",
+          "bic": "COBADEFFXXX"
+        }
+      }
+    }
+  ],
+
+  "visualTestData": [
+    {
+      "testName": "homepage-desktop",
+      "viewport": {
+        "width": 1920,
+        "height": 1080
+      },
+      "elements": [
+        {
+          "selector": "[data-testid='hero-section']",
+          "description": "Main hero banner",
+          "criticalityLevel": "high"
+        },
+        {
+          "selector": "[data-testid='features-grid']",
+          "description": "Features showcase",
+          "criticalityLevel": "medium"
+        },
+        {
+          "selector": "[data-testid='main-navigation']",
+          "description": "Primary navigation",
+          "criticalityLevel": "high"
+        }
+      ],
+      "dynamicElements": [
+        ".timestamp",
+        ".counter",
+        ".loading-spinner",
+        "[data-testid*='notification']"
+      ],
+      "aiSettings": {
+        "functionalEquivalence": true,
+        "colorTolerance": 0.3,
+        "layoutTolerance": 0.2,
+        "ignoreDynamicContent": true
+      }
+    },
+    {
+      "testName": "products-mobile",
+      "viewport": {
+        "width": 375,
+        "height": 667
+      },
+      "elements": [
+        {
+          "selector": "[data-testid='products-grid']",
+          "description": "Product cards grid",
+          "criticalityLevel": "high"
+        },
+        {
+          "selector": "[data-testid='product-filters']",
+          "description": "Filter controls",
+          "criticalityLevel": "medium"
+        }
+      ],
+      "responsiveBreakpoints": [
+        { "width": 320, "description": "Small mobile" },
+        { "width": 375, "description": "iPhone" },
+        { "width": 414, "description": "Large mobile" }
+      ],
+      "aiSettings": {
+        "layoutTolerance": 0.5,
+        "responsiveMode": true
+      }
+    }
+  ],
+
+  "aiLearningData": [
+    {
+      "selector": "[data-testid='add-to-cart-1']",
+      "strategies": [
+        {
+          "name": "data-testid",
+          "selector": "[data-testid='add-to-cart-1']",
+          "successRate": 0.95,
+          "avgResponseTime": 120
+        },
+        {
+          "name": "semantic-role",
+          "selector": "button[aria-label*='Add to cart']",
+          "successRate": 0.88,
+          "avgResponseTime": 180
+        },
+        {
+          "name": "text-content",
+          "selector": "button:contains('Add to Cart')",
+          "successRate": 0.82,
+          "avgResponseTime": 210
+        }
+      ],
+      "context": {
+        "page": "products",
+        "userFlow": "shopping",
+        "frequency": "high"
+      },
+      "learningInsights": [
+        "data-testid most reliable across framework changes",
+        "semantic-role good fallback for accessibility",
+        "text-content affected by internationalization"
+      ]
+    },
+    {
+      "selector": "[data-testid='navigation-menu']",
+      "strategies": [
+        {
+          "name": "data-testid",
+          "selector": "[data-testid='navigation-menu']",
+          "successRate": 0.98,
+          "avgResponseTime": 95
+        },
+        {
+          "name": "semantic-nav",
+          "selector": "nav[role='navigation']",
+          "successRate": 0.92,
+          "avgResponseTime": 110
+        },
+        {
+          "name": "class-based",
+          "selector": ".navbar, .nav-menu",
+          "successRate": 0.75,
+          "avgResponseTime": 250
+        }
+      ],
+      "context": {
+        "page": "global",
+        "userFlow": "navigation",
+        "frequency": "very-high"
+      },
+      "adaptations": [
+        {
+          "change": "bootstrap-to-tailwind",
+          "healingStrategy": "semantic-nav",
+          "successRate": 0.90
+        },
+        {
+          "change": "mobile-hamburger",
+          "healingStrategy": "aria-expanded",
+          "successRate": 0.85
+        }
+      ]
+    }
+  ],
+
+  "performanceBaselines": [
+    {
+      "testName": "page-load-performance",
+      "metrics": {
+        "firstContentfulPaint": 1200,
+        "largestContentfulPaint": 2500,
+        "firstInputDelay": 100,
+        "cumulativeLayoutShift": 0.1
+      },
+      "thresholds": {
+        "firstContentfulPaint": 1500,
+        "largestContentfulPaint": 3000,
+        "firstInputDelay": 300,
+        "cumulativeLayoutShift": 0.25
+      },
+      "aiOptimizations": [
+        "preload-critical-resources",
+        "lazy-load-images", 
+        "minimize-layout-shifts",
+        "optimize-javascript-execution"
+      ]
+    },
+    {
+      "testName": "interaction-performance",
+      "metrics": {
+        "elementFindTime": 85,
+        "clickResponseTime": 45,
+        "formSubmissionTime": 320,
+        "pageTransitionTime": 180
+      },
+      "aiEnhancements": {
+        "predictivePreloading": true,
+        "intelligentCaching": true,
+        "adaptiveTimeouts": true
+      }
+    }
+  ],
+
+  "errorRecoveryScenarios": [
+    {
+      "errorType": "element-not-found",
+      "description": "Target element missing from DOM",
+      "recoveryStrategies": [
+        "wait-for-element",
+        "try-similar-selectors", 
+        "check-parent-containers",
+        "fallback-to-text-search"
+      ],
+      "successRate": 0.85,
+      "avgRecoveryTime": 2500
+    },
+    {
+      "errorType": "network-timeout",
+      "description": "Slow network response",
+      "recoveryStrategies": [
+        "extend-timeout",
+        "retry-with-backoff",
+        "check-loading-indicators",
+        "fallback-offline-mode"
+      ],
+      "successRate": 0.78,
+      "avgRecoveryTime": 5000
+    },
+    {
+      "errorType": "javascript-error",
+      "description": "JavaScript execution failure",
+      "recoveryStrategies": [
+        "wait-for-stability",
+        "bypass-error-element",
+        "alternative-interaction-method",
+        "page-refresh-recovery"
+      ],
+      "successRate": 0.65,
+      "avgRecoveryTime": 3200
+    },
+    {
+      "errorType": "dynamic-content-blocker",
+      "description": "Modal or overlay blocking interaction",
+      "recoveryStrategies": [
+        "detect-and-close-modal",
+        "wait-for-content-stability",
+        "alternative-navigation-path",
+        "force-interaction"
+      ],
+      "successRate": 0.92,
+      "avgRecoveryTime": 1800
+    }
+  ],
+
+  "frameworkMigrationData": [
+    {
+      "migration": "bootstrap-to-tailwind",
+      "classMapping": {
+        "btn": "px-4 py-2 rounded",
+        "btn-primary": "bg-blue-500 text-white",
+        "btn-secondary": "bg-gray-200 text-gray-800",
+        "card": "bg-white rounded-lg shadow-md",
+        "container": "max-w-7xl mx-auto px-4",
+        "row": "flex flex-wrap",
+        "col": "flex-1"
+      },
+      "healingStrategies": [
+        "data-attribute-priority",
+        "semantic-role-fallback",
+        "text-content-matching",
+        "structural-analysis"
+      ],
+      "adaptationRate": 0.88
+    },
+    {
+      "migration": "react-class-to-hooks",
+      "componentChanges": {
+        "lifecycle-methods": "useEffect-hooks",
+        "state-management": "useState-hooks",
+        "context-api": "useContext-hooks"
+      },
+      "testAdaptations": [
+        "component-prop-updates",
+        "hook-dependency-arrays",
+        "async-state-handling"
+      ],
+      "adaptationRate": 0.82
+    },
+    {
+      "migration": "material-ui-v4-to-v5",
+      "breakingChanges": [
+        "theme-structure-updates",
+        "component-prop-changes", 
+        "style-api-modifications"
+      ],
+      "healingApproach": [
+        "prop-name-mapping",
+        "style-selector-updates",
+        "theme-path-adjustments"
+      ],
+      "adaptationRate": 0.76
+    }
+  ],
+
+  "crossBrowserData": [
+    {
+      "browser": "chrome",
+      "version": "91+",
+      "aiCapabilities": {
+        "tensorflow": true,
+        "webgl": true,
+        "performanceApi": true,
+        "intersectionObserver": true
+      },
+      "optimizations": [
+        "gpu-acceleration",
+        "wasm-support",
+        "advanced-caching"
+      ]
+    },
+    {
+      "browser": "firefox",
+      "version": "89+",
+      "aiCapabilities": {
+        "tensorflow": true,
+        "webgl": true,
+        "performanceApi": true,
+        "intersectionObserver": true
+      },
+      "fallbacks": [
+        "canvas-rendering",
+        "polyfill-support"
+      ]
+    },
+    {
+      "browser": "safari",
+      "version": "14+",
+      "aiCapabilities": {
+        "tensorflow": "limited",
+        "webgl": true,
+        "performanceApi": "partial",
+        "intersectionObserver": true
+      },
+      "adaptations": [
+        "webkit-specific-handling",
+        "memory-management",
+        "reduced-ai-features"
+      ]
+    }
+  ],
+
+  "testConfiguration": {
+    "defaultTimeouts": {
+      "pageLoad": 30000,
+      "elementFind": 10000,
+      "networkRequest": 15000,
+      "visualComparison": 5000
+    },
+    "aiSettings": {
+      "confidenceThreshold": 0.8,
+      "maxHealingAttempts": 5,
+      "learningEnabled": true,
+      "visualIntelligence": true,
+      "performanceMonitoring": true
+    },
+    "environmentVariables": {
+      "AI_VISUAL_THRESHOLD": "0.1",
+      "AI_HEALING_ENABLED": "true",
+      "AI_LEARNING_MODE": "active",
+      "AI_PERFORMANCE_TRACKING": "enabled"
+    }
+  }
+}

@@ -1,0 +1,1980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 AI Cypress Testing - Live Results</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 { font-size: 2.5rem; margin-bottom: 10px; }
+        .header p { opacity: 0.9; font-size: 1.1rem; }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        .metric-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+        .metric-card:hover { transform: translateY(-5px); }
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .metric-label {
+            color: #666;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .passed { color: #28a745; }
+        .failed { color: #dc3545; }
+        .info { color: #17a2b8; }
+        .warning { color: #ffc107; }
+        
+        .content { padding: 30px; }
+        .section {
+            margin-bottom: 40px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+        }
+        .section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .test-suite {
+            margin-bottom: 25px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        .suite-header {
+            background: #667eea;
+            color: white;
+            padding: 15px 20px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .suite-stats {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .test-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease;
+        }
+        .test-item:hover { background-color: #f8f9fa; }
+        .test-item:last-child { border-bottom: none; }
+        
+        .test-name { font-weight: 500; flex: 1; }
+        .test-status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .status-passed { background: #d4edda; color: #155724; }
+        .status-failed { background: #f8d7da; color: #721c24; }
+        .status-skipped { background: #fff3cd; color: #856404; }
+        .status-running { background: #cce5ff; color: #004085; animation: pulse 2s infinite; }
+        
+        .test-duration {
+            margin-left: 15px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .ai-operations {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .operation-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        .operation-type {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .operation-details {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .status-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 1000;
+        }
+        .live-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #28a745;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            border-top: 1px solid #eee;
+            background: #f8f9fa;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        @media (max-width: 768px) {
+            .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+            .test-item { flex-direction: column; align-items: flex-start; }
+            .test-duration { margin-left: 0; margin-top: 5px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="status-indicator">
+        <span class="live-dot"></span>
+        Live Results - Updated: 6/25/2025, 10:22:32 AM
+    </div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🤖 AI-Enhanced Cypress Testing</h1>
+            <p>Session Duration: 59m 24s | Framework: AI-Enhanced Cypress v2.0</p>
+        </div>
+        
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-value passed">187</div>
+                <div class="metric-label">Total Tests</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value passed">8</div>
+                <div class="metric-label">Passed</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value failed">0</div>
+                <div class="metric-label">Failed</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value info">4.3%</div>
+                <div class="metric-label">Success Rate</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value info">3260ms</div>
+                <div class="metric-label">Avg Duration</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value warning">24</div>
+                <div class="metric-label">AI Operations</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value warning">23</div>
+                <div class="metric-label">Healing Events</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value info">11</div>
+                <div class="metric-label">Visual Tests</div>
+            </div>
+        </div>
+        
+        <div class="content">
+            
+            
+            <div class="section">
+                <h2>📊 Test Results by Suite</h2>
+                
+                    <div class="test-suite">
+                        <div class="suite-header">
+                            <span>Other Tests</span>
+                            <span class="suite-stats">
+                                4/137 passed (5m 27s)
+                            </span>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate superior element finding with fallback strategies</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate superior element finding with fallback strategies</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3204ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should intelligently handle loading states and dynamic content</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should intelligently handle loading states and dynamic content</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">11303ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate learning capabilities and performance optimization</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate learning capabilities and performance optimization</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">4133ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate intelligent form handling with field detection</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate intelligent form handling with field detection</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">12875ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should gracefully handle element failures and recover</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should gracefully handle element failures and recover</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">1536ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should pass when only button colors change (functional equivalence)</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should pass when only button colors change (functional equivalence)</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">4902ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should handle layout rearrangements intelligently</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should handle layout rearrangements intelligently</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">5267ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should ignore dynamic content and promotional banners</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should ignore dynamic content and promotional banners</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">5316ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should handle responsive design changes</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should handle responsive design changes</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">6886ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should detect actual functional changes</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should detect actual functional changes</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">4766ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should heal when data-testid changes slightly</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should heal when data-testid changes slightly</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">8574ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should heal navigation when menu structure changes</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should heal navigation when menu structure changes</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">1437ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should heal form filling when field structure changes</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should heal form filling when field structure changes</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">2582ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should handle complete framework changes</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should handle complete framework changes</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3103ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should adapt to dynamic content additions</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should adapt to dynamic content additions</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">6338ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">Session Initialization</span>
+                            <div>
+                                <span class="test-status status-started">STARTED</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should complete full shopping journey with AI assistance</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">Complete E-commerce Flow</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">Complete E-commerce Flow</span>
+                            <div>
+                                <span class="test-status status-passed">PASSED</span>
+                                <span class="test-duration">2806ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should complete full shopping journey with AI assistance</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">6038ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should handle complete UI framework changes seamlessly</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">UI Framework Migration</span>
+                            <div>
+                                <span class="test-status status-passed">PASSED</span>
+                                <span class="test-duration">1ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should handle complete UI framework changes seamlessly</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">5012ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should handle dynamic content updates and performance monitoring</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">Real-time Content & Performance</span>
+                            <div>
+                                <span class="test-status status-passed">PASSED</span>
+                                <span class="test-duration">1ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should handle dynamic content updates and performance monitoring</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">6472ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate learning from multiple test iterations</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">Continuous Learning</span>
+                            <div>
+                                <span class="test-status status-passed">PASSED</span>
+                                <span class="test-duration">13ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate learning from multiple test iterations</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">6847ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should heal when data-testid changes slightly</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should heal when data-testid changes slightly</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">13615ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should heal navigation when menu structure changes</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should heal navigation when menu structure changes</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">1453ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should heal form filling when field structure changes</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should heal form filling when field structure changes</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">2653ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should handle complete framework changes</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should handle complete framework changes</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3107ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should adapt to dynamic content additions</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should adapt to dynamic content additions</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3783ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate superior element finding with fallback strategies</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate superior element finding with fallback strategies</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3581ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should intelligently handle loading states and dynamic content</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should intelligently handle loading states and dynamic content</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">16584ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate learning capabilities and performance optimization</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate learning capabilities and performance optimization</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">4476ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate intelligent form handling with field detection</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate intelligent form handling with field detection</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">1529ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should gracefully handle element failures and recover</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should gracefully handle element failures and recover</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">1538ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate superior element finding with fallback strategies</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate superior element finding with fallback strategies</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3075ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should intelligently handle loading states and dynamic content</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate superior element finding with fallback strategies</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate superior element finding with fallback strategies</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3273ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should intelligently handle loading states and dynamic content</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should intelligently handle loading states and dynamic content</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">9945ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate learning capabilities and performance optimization</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate learning capabilities and performance optimization</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">4047ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate intelligent form handling with field detection</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate intelligent form handling with field detection</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3156ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should gracefully handle element failures and recover</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should gracefully handle element failures and recover</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">1271ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate superior element finding with fallback strategies</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate superior element finding with fallback strategies</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3848ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should intelligently handle loading states and dynamic content</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should intelligently handle loading states and dynamic content</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">13695ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate learning capabilities and performance optimization</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate learning capabilities and performance optimization</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">4008ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate intelligent form handling with field detection</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate intelligent form handling with field detection</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3226ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should gracefully handle element failures and recover</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should gracefully handle element failures and recover</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">1303ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate superior element finding with fallback strategies</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate superior element finding with fallback strategies</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3006ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should intelligently handle loading states and dynamic content</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should intelligently handle loading states and dynamic content</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">16395ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate learning capabilities and performance optimization</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate learning capabilities and performance optimization</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3969ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate intelligent form handling with field detection</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate intelligent form handling with field detection</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3137ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should gracefully handle element failures and recover</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should gracefully handle element failures and recover</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">1303ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate superior element finding with fallback strategies</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate superior element finding with fallback strategies</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3052ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should intelligently handle loading states and dynamic content</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should intelligently handle loading states and dynamic content</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">17020ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate learning capabilities and performance optimization</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate learning capabilities and performance optimization</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">4152ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate intelligent form handling with field detection</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate intelligent form handling with field detection</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3242ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should gracefully handle element failures and recover</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should gracefully handle element failures and recover</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">1277ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate superior element finding with fallback strategies</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate superior element finding with fallback strategies</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">2974ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should intelligently handle loading states and dynamic content</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should intelligently handle loading states and dynamic content</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">7048ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate learning capabilities and performance optimization</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate learning capabilities and performance optimization</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3891ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate intelligent form handling with field detection</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate intelligent form handling with field detection</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3189ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should gracefully handle element failures and recover</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should gracefully handle element failures and recover</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">1266ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should heal when data-testid changes slightly</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should heal when data-testid changes slightly</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">13611ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should heal navigation when menu structure changes</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should heal navigation when menu structure changes</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">1460ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should heal form filling when field structure changes</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should heal form filling when field structure changes</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">2638ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should handle complete framework changes</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should handle complete framework changes</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3110ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should adapt to dynamic content additions</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should adapt to dynamic content additions</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3723ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should heal when data-testid changes slightly</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should heal when data-testid changes slightly</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">4705ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should heal navigation when menu structure changes</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should heal navigation when menu structure changes</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">1444ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should heal form filling when field structure changes</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should heal form filling when field structure changes</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">2470ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should handle complete framework changes</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should handle complete framework changes</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3061ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should adapt to dynamic content additions</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should adapt to dynamic content additions</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3699ms</span>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    <div class="test-suite">
+                        <div class="suite-header">
+                            <span>Basic Functionality</span>
+                            <span class="suite-stats">
+                                0/36 passed (3m 1s)
+                            </span>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate superior element finding with fallback strategies</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3012ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should intelligently handle loading states and dynamic content</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">10914ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate learning capabilities and performance optimization</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3988ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate intelligent form handling with field detection</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">12642ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should gracefully handle element failures and recover</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">1375ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate superior element finding with fallback strategies</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3371ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should intelligently handle loading states and dynamic content</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">16411ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate learning capabilities and performance optimization</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">4317ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate intelligent form handling with field detection</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">1319ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should gracefully handle element failures and recover</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">1361ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate superior element finding with fallback strategies</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">2952ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate superior element finding with fallback strategies</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3111ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should intelligently handle loading states and dynamic content</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">9851ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate learning capabilities and performance optimization</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3907ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate intelligent form handling with field detection</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3051ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should gracefully handle element failures and recover</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">1164ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate superior element finding with fallback strategies</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3599ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should intelligently handle loading states and dynamic content</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">13234ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate learning capabilities and performance optimization</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3883ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate intelligent form handling with field detection</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3113ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should gracefully handle element failures and recover</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">1205ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate superior element finding with fallback strategies</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">2902ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should intelligently handle loading states and dynamic content</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">16307ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate learning capabilities and performance optimization</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3852ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate intelligent form handling with field detection</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3043ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should gracefully handle element failures and recover</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">1209ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate superior element finding with fallback strategies</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">2885ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should intelligently handle loading states and dynamic content</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">16932ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate learning capabilities and performance optimization</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">4001ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate intelligent form handling with field detection</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3114ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should gracefully handle element failures and recover</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">1173ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate superior element finding with fallback strategies</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">2873ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should intelligently handle loading states and dynamic content</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">6957ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate learning capabilities and performance optimization</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3755ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should demonstrate intelligent form handling with field detection</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">3101ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should gracefully handle element failures and recover</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">1171ms</span>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    <div class="test-suite">
+                        <div class="suite-header">
+                            <span>AI Visual Intelligence</span>
+                            <span class="suite-stats">
+                                0/2 passed (1.3s)
+                            </span>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should analyze AI visual performance across scenarios</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should analyze AI visual performance across scenarios</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">1260ms</span>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    <div class="test-suite">
+                        <div class="suite-header">
+                            <span>Self-Healing Test Capabilities</span>
+                            <span class="suite-stats">
+                                0/8 passed (5.1s)
+                            </span>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should measure healing effectiveness and performance</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should measure healing effectiveness and performance</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">1298ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should measure healing effectiveness and performance</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should measure healing effectiveness and performance</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">1239ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should measure healing effectiveness and performance</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should measure healing effectiveness and performance</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">1322ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should measure healing effectiveness and performance</span>
+                            <div>
+                                <span class="test-status status-running">RUNNING</span>
+                                <span class="test-duration">0ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">should measure healing effectiveness and performance</span>
+                            <div>
+                                <span class="test-status status-unknown">UNKNOWN</span>
+                                <span class="test-duration">1234ms</span>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    <div class="test-suite">
+                        <div class="suite-header">
+                            <span>Self-Healing Capabilities</span>
+                            <span class="suite-stats">
+                                4/4 passed (1m 34s)
+                            </span>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">Self-Healing Performance Analysis</span>
+                            <div>
+                                <span class="test-status status-passed">PASSED</span>
+                                <span class="test-duration">23907ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">Self-Healing Performance Analysis</span>
+                            <div>
+                                <span class="test-status status-passed">PASSED</span>
+                                <span class="test-duration">27155ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">Self-Healing Performance Analysis</span>
+                            <div>
+                                <span class="test-status status-passed">PASSED</span>
+                                <span class="test-duration">26450ms</span>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <span class="test-name">Self-Healing Performance Analysis</span>
+                            <div>
+                                <span class="test-status status-passed">PASSED</span>
+                                <span class="test-duration">17189ms</span>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+            </div>
+            
+            
+            <div class="section">
+                <h2>🤖 Recent AI Operations</h2>
+                <div class="ai-operations">
+                    
+                    <div class="operation-card">
+                        <div class="operation-type">framework_migration_simulation</div>
+                        <div class="operation-details">
+                            Target: bootstrap_to_material_ui<br>
+                            Success: ✅<br>
+                            Duration: 0ms
+                        </div>
+                    </div>
+                    
+                    <div class="operation-card">
+                        <div class="operation-type">healing-performance-analysis</div>
+                        <div class="operation-details">
+                            Target: self-healing-system<br>
+                            Success: ✅<br>
+                            Duration: 0ms
+                        </div>
+                    </div>
+                    
+                    <div class="operation-card">
+                        <div class="operation-type">framework_migration_simulation</div>
+                        <div class="operation-details">
+                            Target: bootstrap_to_material_ui<br>
+                            Success: ✅<br>
+                            Duration: 0ms
+                        </div>
+                    </div>
+                    
+                    <div class="operation-card">
+                        <div class="operation-type">healing-performance-analysis</div>
+                        <div class="operation-details">
+                            Target: self-healing-system<br>
+                            Success: ✅<br>
+                            Duration: 0ms
+                        </div>
+                    </div>
+                    
+                    <div class="operation-card">
+                        <div class="operation-type">framework_migration_simulation</div>
+                        <div class="operation-details">
+                            Target: bootstrap_to_material_ui<br>
+                            Success: ✅<br>
+                            Duration: 0ms
+                        </div>
+                    </div>
+                    
+                    <div class="operation-card">
+                        <div class="operation-type">healing-performance-analysis</div>
+                        <div class="operation-details">
+                            Target: self-healing-system<br>
+                            Success: ✅<br>
+                            Duration: 0ms
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            
+            
+            <div class="section">
+                <h2>🔧 Self-Healing Events (Success Rate: 100.0%)</h2>
+                <div class="ai-operations">
+                    
+                    <div class="operation-card">
+                        <div class="operation-type">Healing: navigation-healing</div>
+                        <div class="operation-details">
+                            Original: N/A<br>
+                            Strategy: adaptive-navigation<br>
+                            Result: ✅ Success
+                        </div>
+                    </div>
+                    
+                    <div class="operation-card">
+                        <div class="operation-type">Healing: form-healing</div>
+                        <div class="operation-details">
+                            Original: N/A<br>
+                            Strategy: adaptive-field-selectors<br>
+                            Result: ✅ Success
+                        </div>
+                    </div>
+                    
+                    <div class="operation-card">
+                        <div class="operation-type">Healing: framework-change-healing</div>
+                        <div class="operation-details">
+                            Original: N/A<br>
+                            Strategy: css-class-adaptation<br>
+                            Result: ✅ Success
+                        </div>
+                    </div>
+                    
+                    <div class="operation-card">
+                        <div class="operation-type">Healing: dynamic-content-healing</div>
+                        <div class="operation-details">
+                            Original: N/A<br>
+                            Strategy: content-aware-selection<br>
+                            Result: ✅ Success
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            
+            
+            <div class="section">
+                <h2>🎨 Visual Tests (Accuracy: 63.6%)</h2>
+                <div class="ai-operations">
+                    
+                    <div class="operation-card">
+                        <div class="operation-type">Visual: should complete full shopping journey with AI assistance</div>
+                        <div class="operation-details">
+                            Similarity: 89.8%<br>
+                            Type: identical<br>
+                            Result: ❌ Failed
+                        </div>
+                    </div>
+                    
+                    <div class="operation-card">
+                        <div class="operation-type">Visual: dashboard-with-updates</div>
+                        <div class="operation-details">
+                            Similarity: 92.8%<br>
+                            Type: identical<br>
+                            Result: ✅ Passed
+                        </div>
+                    </div>
+                    
+                    <div class="operation-card">
+                        <div class="operation-type">Visual: should handle dynamic content updates and performance monitoring</div>
+                        <div class="operation-details">
+                            Similarity: 89.3%<br>
+                            Type: identical<br>
+                            Result: ❌ Failed
+                        </div>
+                    </div>
+                    
+                    <div class="operation-card">
+                        <div class="operation-type">Visual: should handle dynamic content updates and performance monitoring</div>
+                        <div class="operation-details">
+                            Similarity: 92.8%<br>
+                            Type: identical<br>
+                            Result: ❌ Failed
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+        </div>
+        
+        <div class="footer">
+            <p>🤖 AI-Enhanced Cypress Testing Framework v2.0</p>
+            <p>This report updates automatically as tests run. Refresh browser if updates stop.</p>
+        </div>
+    </div>
+    
+    <script>
+        // Auto-refresh every 3 seconds to show live updates
+        setInterval(() => {
+            window.location.reload();
+        }, 3000);
+        
+        // Add some interactivity
+        document.querySelectorAll('.test-item').forEach(item => {
+            item.addEventListener('click', () => {
+                item.style.backgroundColor = item.style.backgroundColor === 'rgb(248, 249, 250)' ? '' : '#f8f9fa';
+            });
+        });
+    </script>
+</body>
+</html>

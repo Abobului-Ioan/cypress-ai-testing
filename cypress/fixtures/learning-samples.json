@@ -1,0 +1,605 @@
+{
+  "selectorLearningData": {
+    "successful_patterns": [
+      {
+        "pattern_id": "btn_primary_pattern",
+        "description": "Primary button selector patterns across frameworks",
+        "selectors": [
+          {
+            "selector": "[data-testid*='button'], [data-testid*='btn']",
+            "confidence": 0.95,
+            "success_rate": 0.92,
+            "avg_response_time": 120,
+            "frameworks": ["bootstrap", "tailwind", "material-ui", "custom"],
+            "contexts": ["forms", "navigation", "actions"]
+          },
+          {
+            "selector": "button[class*='primary'], .btn-primary, .MuiButton-containedPrimary",
+            "confidence": 0.78,
+            "success_rate": 0.84,
+            "avg_response_time": 180,
+            "frameworks": ["bootstrap", "material-ui"],
+            "contexts": ["forms", "actions"]
+          },
+          {
+            "selector": "button[role='button'], [role='button']",
+            "confidence": 0.88,
+            "success_rate": 0.89,
+            "avg_response_time": 150,
+            "frameworks": ["all"],
+            "contexts": ["accessibility", "custom-components"]
+          }
+        ],
+        "learning_insights": [
+          "data-testid attributes provide highest reliability across framework changes",
+          "Role-based selectors offer good accessibility fallback",
+          "Class-based selectors are framework-dependent but fast when available"
+        ]
+      },
+      {
+        "pattern_id": "form_input_pattern",
+        "description": "Form input field identification patterns",
+        "selectors": [
+          {
+            "selector": "[data-testid$='-input'], [data-testid$='-field']",
+            "confidence": 0.94,
+            "success_rate": 0.91,
+            "avg_response_time": 95,
+            "field_types": ["text", "email", "password", "number"],
+            "contexts": ["registration", "profile", "checkout"]
+          },
+          {
+            "selector": "input[name], textarea[name], select[name]",
+            "confidence": 0.82,
+            "success_rate": 0.87,
+            "avg_response_time": 110,
+            "field_types": ["all"],
+            "contexts": ["traditional-forms"]
+          },
+          {
+            "selector": "[aria-label*='input'], [placeholder*='enter']",
+            "confidence": 0.76,
+            "success_rate": 0.79,
+            "avg_response_time": 145,
+            "field_types": ["text", "search"],
+            "contexts": ["modern-ui", "search-forms"]
+          }
+        ],
+        "field_type_patterns": {
+          "email": {
+            "indicators": ["email", "mail", "@", "user"],
+            "validation_patterns": ["[type='email']", "[name*='email']", "[placeholder*='email']"],
+            "confidence_boost": 0.15
+          },
+          "password": {
+            "indicators": ["password", "pass", "pwd", "secret"],
+            "validation_patterns": ["[type='password']", "[name*='password']", "[autocomplete*='password']"],
+            "confidence_boost": 0.20
+          },
+          "phone": {
+            "indicators": ["phone", "tel", "mobile", "number"],
+            "validation_patterns": ["[type='tel']", "[name*='phone']", "[pattern*='phone']"],
+            "confidence_boost": 0.12
+          }
+        }
+      },
+      {
+        "pattern_id": "navigation_pattern",
+        "description": "Navigation element patterns and adaptive strategies",
+        "selectors": [
+          {
+            "selector": "[data-testid*='nav'], [data-testid*='menu'], [data-testid*='link']",
+            "confidence": 0.96,
+            "success_rate": 0.93,
+            "avg_response_time": 85,
+            "nav_types": ["primary", "secondary", "mobile", "footer"],
+            "contexts": ["header", "sidebar", "mobile-menu"]
+          },
+          {
+            "selector": "nav a, .navbar a, [role='navigation'] a",
+            "confidence": 0.89,
+            "success_rate": 0.86,
+            "avg_response_time": 125,
+            "nav_types": ["primary", "secondary"],
+            "contexts": ["traditional-nav"]
+          },
+          {
+            "selector": "a[href*='products'], a[href*='cart'], a[href*='profile']",
+            "confidence": 0.83,
+            "success_rate": 0.81,
+            "avg_response_time": 160,
+            "nav_types": ["url-based"],
+            "contexts": ["spa-routing"]
+          }
+        ],
+        "adaptive_strategies": {
+          "mobile_hamburger": {
+            "detection": "[data-testid*='hamburger'], .hamburger, [aria-label*='menu']",
+            "activation": "click_to_expand",
+            "wait_condition": "[data-testid*='mobile-menu'][style*='block']",
+            "success_rate": 0.88
+          },
+          "mega_menu": {
+            "detection": "[data-testid*='mega'], .mega-menu, [aria-haspopup='true']",
+            "activation": "hover_or_click",
+            "wait_condition": "[aria-expanded='true']",
+            "success_rate": 0.82
+          },
+          "breadcrumb_nav": {
+            "detection": "[data-testid*='breadcrumb'], .breadcrumb, [aria-label*='breadcrumb']",
+            "strategy": "hierarchical_navigation",
+            "confidence": 0.75
+          }
+        }
+      }
+    ],
+
+    "healing_patterns": [
+      {
+        "change_type": "css_framework_migration",
+        "description": "Patterns for healing during CSS framework changes",
+        "migrations": [
+          {
+            "from": "bootstrap",
+            "to": "tailwind",
+            "class_mappings": {
+              "btn btn-primary": "px-4 py-2 bg-blue-500 text-white rounded",
+              "btn btn-secondary": "px-4 py-2 bg-gray-200 text-gray-800 rounded",
+              "card": "bg-white rounded-lg shadow-md",
+              "container": "max-w-7xl mx-auto px-4",
+              "row": "flex flex-wrap",
+              "col-md-6": "md:w-1/2"
+            },
+            "healing_strategies": [
+              {
+                "strategy": "data_testid_priority",
+                "description": "Prioritize data-testid over class selectors",
+                "success_rate": 0.94,
+                "implementation": "if (element.hasAttribute('data-testid')) return element;"
+              },
+              {
+                "strategy": "semantic_role_fallback",
+                "description": "Use ARIA roles when classes change",
+                "success_rate": 0.87,
+                "implementation": "querySelector('[role=\"button\"]')"
+              },
+              {
+                "strategy": "text_content_matching",
+                "description": "Match by visible text content",
+                "success_rate": 0.81,
+                "implementation": "xpath: //*[contains(text(), 'target_text')]"
+              }
+            ]
+          },
+          {
+            "from": "material_ui_v4",
+            "to": "material_ui_v5",
+            "prop_changes": {
+              "TextField.variant": "outlined → variant='outlined'",
+              "Button.color": "primary → color='primary'",
+              "makeStyles": "styled-components"
+            },
+            "healing_strategies": [
+              {
+                "strategy": "component_prop_adaptation",
+                "success_rate": 0.89,
+                "description": "Adapt to new prop structures"
+              },
+              {
+                "strategy": "style_api_migration",
+                "success_rate": 0.82,
+                "description": "Handle makeStyles to styled migration"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "change_type": "dom_restructuring",
+        "description": "Healing patterns for DOM structure changes",
+        "scenarios": [
+          {
+            "scenario": "wrapper_element_added",
+            "description": "New wrapper divs or containers added",
+            "detection": "target_element_missing_but_similar_exists",
+            "healing_approach": [
+              "traverse_parent_containers",
+              "look_for_child_elements",
+              "match_by_text_content"
+            ],
+            "success_rate": 0.85,
+            "example": {
+              "before": "<button data-testid='submit'>Submit</button>",
+              "after": "<div class='wrapper'><div class='inner'><button data-testid='submit'>Submit</button></div></div>"
+            }
+          },
+          {
+            "scenario": "element_moved_location",
+            "description": "Element relocated within DOM tree",
+            "detection": "element_exists_elsewhere",
+            "healing_approach": [
+              "global_search_by_testid",
+              "content_based_search",
+              "attribute_matching"
+            ],
+            "success_rate": 0.91,
+            "example": {
+              "before": "<header><button data-testid='login'>Login</button></header>",
+              "after": "<nav><button data-testid='login'>Login</button></nav>"
+            }
+          },
+          {
+            "scenario": "container_structure_changed",
+            "description": "Parent container structure modified",
+            "detection": "navigation_path_broken",
+            "healing_approach": [
+              "breadth_first_search",
+              "attribute_preservation_check",
+              "semantic_relationship_analysis"
+            ],
+            "success_rate": 0.78
+          }
+        ]
+      },
+      {
+        "change_type": "dynamic_content_adaptation",
+        "description": "Healing for dynamic content and loading states",
+        "patterns": [
+          {
+            "pattern": "loading_overlay_blocking",
+            "description": "Loading overlays preventing interaction",
+            "detection_signals": [
+              "element_exists_but_not_interactable",
+              "overlay_elements_present",
+              "loading_indicators_active"
+            ],
+            "healing_strategies": [
+              {
+                "strategy": "wait_for_overlay_removal",
+                "max_wait": 10000,
+                "check_interval": 500,
+                "success_rate": 0.92
+              },
+              {
+                "strategy": "force_interaction_through_overlay",
+                "conditions": ["overlay_transparent", "element_clickable"],
+                "success_rate": 0.67
+              }
+            ]
+          },
+          {
+            "pattern": "modal_interruption",
+            "description": "Modal dialogs interrupting user flow",
+            "detection_signals": [
+              "modal_visible",
+              "backdrop_present",
+              "focus_trapped"
+            ],
+            "healing_strategies": [
+              {
+                "strategy": "handle_modal_appropriately",
+                "actions": ["close_if_dismissible", "interact_if_required"],
+                "success_rate": 0.89
+              },
+              {
+                "strategy": "wait_for_modal_completion",
+                "conditions": ["form_modal", "confirmation_modal"],
+                "success_rate": 0.84
+              }
+            ]
+          },
+          {
+            "pattern": "infinite_scroll_loading",
+            "description": "Content loading via infinite scroll",
+            "detection_signals": [
+              "scroll_container_present",
+              "load_more_trigger",
+              "skeleton_loaders"
+            ],
+            "healing_strategies": [
+              {
+                "strategy": "trigger_load_more",
+                "implementation": "scroll_to_bottom_or_click_load_more",
+                "success_rate": 0.86
+              },
+              {
+                "strategy": "wait_for_content_stabilization",
+                "timeout": 15000,
+                "success_rate": 0.79
+              }
+            ]
+          }
+        ]
+      }
+    ],
+
+    "visual_learning_data": [
+      {
+        "scenario": "color_scheme_changes",
+        "description": "Learning patterns for color-only changes",
+        "training_samples": [
+          {
+            "change_type": "primary_color_update",
+            "before": "#007bff",
+            "after": "#10b981",
+            "elements_affected": ["buttons", "links", "highlights"],
+            "functional_impact": "none",
+            "ai_decision": "pass_with_functional_equivalence",
+            "confidence": 0.94
+          },
+          {
+            "change_type": "dark_mode_toggle",
+            "before": "light_theme",
+            "after": "dark_theme",
+            "elements_affected": ["backgrounds", "text", "borders"],
+            "functional_impact": "none",
+            "ai_decision": "pass_with_theme_awareness",
+            "confidence": 0.91
+          },
+          {
+            "change_type": "brand_color_refresh",
+            "before": "brand_v1_colors",
+            "after": "brand_v2_colors",
+            "elements_affected": ["headers", "navigation", "cta_buttons"],
+            "functional_impact": "none",
+            "ai_decision": "pass_with_brand_update_recognition",
+            "confidence": 0.88
+          }
+        ],
+        "decision_criteria": {
+          "layout_preserved": "weight: 0.4",
+          "text_content_same": "weight: 0.3",
+          "interactive_elements_present": "weight: 0.2",
+          "color_change_only": "weight: 0.1"
+        }
+      },
+      {
+        "scenario": "layout_rearrangement",
+        "description": "Learning for layout changes that preserve functionality",
+        "training_samples": [
+          {
+            "change_type": "responsive_mobile_layout",
+            "description": "Desktop to mobile layout adaptation",
+            "layout_changes": ["grid_to_stack", "horizontal_to_vertical", "menu_to_hamburger"],
+            "functional_impact": "layout_only",
+            "ai_decision": "pass_with_responsive_awareness",
+            "confidence": 0.85
+          },
+          {
+            "change_type": "section_reordering",
+            "description": "Page sections moved but content preserved",
+            "layout_changes": ["hero_moved_down", "features_moved_up", "footer_unchanged"],
+            "functional_impact": "navigation_flow_changed",
+            "ai_decision": "pass_with_layout_tolerance",
+            "confidence": 0.79
+          },
+          {
+            "change_type": "sidebar_to_top_nav",
+            "description": "Navigation restructuring",
+            "layout_changes": ["sidebar_removed", "top_nav_expanded", "content_reflowed"],
+            "functional_impact": "navigation_method_changed",
+            "ai_decision": "review_required",
+            "confidence": 0.62
+          }
+        ]
+      },
+      {
+        "scenario": "content_updates",
+        "description": "Learning for content changes vs functional changes",
+        "training_samples": [
+          {
+            "change_type": "text_content_update",
+            "before": "Welcome to our store",
+            "after": "Discover amazing products",
+            "impact": "marketing_copy_only",
+            "ai_decision": "pass_with_content_awareness",
+            "confidence": 0.92
+          },
+          {
+            "change_type": "image_replacement",
+            "before": "hero_image_v1.jpg",
+            "after": "hero_image_v2.jpg",
+            "impact": "visual_content_only",
+            "ai_decision": "pass_with_image_tolerance",
+            "confidence": 0.89
+          },
+          {
+            "change_type": "button_text_change",
+            "before": "Add to Cart",
+            "after": "Buy Now",
+            "impact": "call_to_action_wording",
+            "ai_decision": "review_for_ux_impact",
+            "confidence": 0.71
+          }
+        ]
+      }
+    ],
+
+    "performance_learning_data": [
+      {
+        "operation": "element_finding",
+        "optimization_patterns": [
+          {
+            "pattern": "cache_successful_selectors",
+            "description": "Cache selectors that work consistently",
+            "implementation": {
+              "cache_duration": "session",
+              "cache_key": "page_url + selector_hash",
+              "invalidation": "dom_mutation_detected"
+            },
+            "performance_improvement": "35-45%",
+            "success_scenarios": ["static_content", "form_fields", "navigation"]
+          },
+          {
+            "pattern": "prioritize_fast_selectors",
+            "description": "Learn which selector types are fastest",
+            "selector_performance": {
+              "id_selectors": { "avg_time": 12, "reliability": 0.98 },
+              "data_testid": { "avg_time": 18, "reliability": 0.95 },
+              "class_selectors": { "avg_time": 25, "reliability": 0.82 },
+              "xpath_selectors": { "avg_time": 85, "reliability": 0.78 }
+            },
+            "learning_algorithm": "weighted_average_with_decay"
+          },
+          {
+            "pattern": "adaptive_timeout_learning",
+            "description": "Learn optimal timeouts for different page types",
+            "page_type_timeouts": {
+              "dashboard_pages": { "element_find": 2000, "page_load": 8000 },
+              "product_pages": { "element_find": 3000, "page_load": 12000 },
+              "checkout_pages": { "element_find": 5000, "page_load": 15000 }
+            },
+            "adjustment_factors": {
+              "network_speed": "±30%",
+              "page_complexity": "±50%",
+              "dynamic_content": "+100%"
+            }
+          }
+        ]
+      },
+      {
+        "operation": "visual_comparison",
+        "optimization_patterns": [
+          {
+            "pattern": "intelligent_region_detection",
+            "description": "Learn to identify and ignore dynamic regions",
+            "dynamic_region_patterns": {
+              "timestamps": { "selectors": [".timestamp", "[data-time]"], "ignore_rate": 0.98 },
+              "counters": { "selectors": [".counter", "[data-count]"], "ignore_rate": 0.95 },
+              "loading_spinners": { "selectors": [".loading", ".spinner"], "ignore_rate": 0.99 },
+              "notifications": { "selectors": [".notification", ".alert"], "ignore_rate": 0.87 }
+            },
+            "learning_approach": "pattern_recognition_with_context"
+          },
+          {
+            "pattern": "threshold_optimization",
+            "description": "Learn optimal thresholds for different scenarios",
+            "scenario_thresholds": {
+              "color_only_changes": { "threshold": 0.05, "confidence": 0.92 },
+              "layout_changes": { "threshold": 0.25, "confidence": 0.78 },
+              "content_updates": { "threshold": 0.15, "confidence": 0.85 },
+              "framework_migrations": { "threshold": 0.40, "confidence": 0.71 }
+            },
+            "adaptive_adjustment": "based_on_historical_accuracy"
+          }
+        ]
+      }
+    ],
+
+    "error_recovery_learning": [
+      {
+        "error_type": "element_not_found",
+        "learning_data": [
+          {
+            "root_cause": "element_timing",
+            "symptoms": ["element_exists_after_delay", "loading_indicators_present"],
+            "successful_strategies": [
+              { "strategy": "increase_timeout", "success_rate": 0.89 },
+              { "strategy": "wait_for_loading_completion", "success_rate": 0.94 },
+              { "strategy": "retry_with_backoff", "success_rate": 0.82 }
+            ]
+          },
+          {
+            "root_cause": "selector_obsolete",
+            "symptoms": ["element_never_appears", "page_structure_changed"],
+            "successful_strategies": [
+              { "strategy": "try_fallback_selectors", "success_rate": 0.76 },
+              { "strategy": "semantic_search", "success_rate": 0.83 },
+              { "strategy": "text_content_search", "success_rate": 0.71 }
+            ]
+          },
+          {
+            "root_cause": "dynamic_content_blocking",
+            "symptoms": ["element_exists_but_covered", "overlay_detected"],
+            "successful_strategies": [
+              { "strategy": "close_overlays", "success_rate": 0.91 },
+              { "strategy": "wait_for_overlay_removal", "success_rate": 0.88 },
+              { "strategy": "force_interaction", "success_rate": 0.63 }
+            ]
+          }
+        ]
+      },
+      {
+        "error_type": "network_issues",
+        "learning_data": [
+          {
+            "root_cause": "slow_network",
+            "symptoms": ["long_response_times", "partial_content_loading"],
+            "successful_strategies": [
+              { "strategy": "increase_timeouts", "success_rate": 0.85 },
+              { "strategy": "retry_requests", "success_rate": 0.78 },
+              { "strategy": "fallback_offline_mode", "success_rate": 0.42 }
+            ]
+          },
+          {
+            "root_cause": "api_errors",
+            "symptoms": ["404_responses", "500_errors", "timeout_errors"],
+            "successful_strategies": [
+              { "strategy": "retry_with_exponential_backoff", "success_rate": 0.72 },
+              { "strategy": "use_cached_data", "success_rate": 0.68 },
+              { "strategy": "graceful_degradation", "success_rate": 0.81 }
+            ]
+          }
+        ]
+      }
+    ],
+
+    "adaptation_intelligence": {
+      "framework_migration_rules": [
+        {
+          "rule": "preserve_data_testid_priority",
+          "description": "Always prioritize data-testid attributes over class names",
+          "confidence": 0.96,
+          "applicable_scenarios": ["all_framework_changes"]
+        },
+        {
+          "rule": "semantic_html_fallback",
+          "description": "Use semantic HTML elements when specific selectors fail",
+          "confidence": 0.84,
+          "applicable_scenarios": ["accessibility_focused", "modern_frameworks"]
+        },
+        {
+          "rule": "text_content_last_resort",
+          "description": "Use text content matching as final fallback",
+          "confidence": 0.72,
+          "applicable_scenarios": ["major_restructuring", "component_library_changes"]
+        }
+      ],
+      "learning_feedback_loops": [
+        {
+          "feedback_type": "test_success_rate",
+          "measurement": "percentage_of_passing_tests",
+          "adjustment_trigger": "success_rate_below_85%",
+          "adaptation_action": "increase_fallback_selector_priority"
+        },
+        {
+          "feedback_type": "performance_degradation",
+          "measurement": "average_test_execution_time",
+          "adjustment_trigger": "execution_time_increase_20%",
+          "adaptation_action": "optimize_selector_strategy_order"
+        },
+        {
+          "feedback_type": "false_positive_rate",
+          "measurement": "visual_test_false_positives",
+          "adjustment_trigger": "false_positive_rate_above_5%",
+          "adaptation_action": "adjust_visual_similarity_thresholds"
+        }
+      ]
+    },
+
+    "training_metadata": {
+      "data_collection_period": "2024-01-01 to 2024-12-31",
+      "test_executions_analyzed": 15847,
+      "unique_selectors_learned": 3421,
+      "framework_migrations_studied": 89,
+      "healing_events_recorded": 2156,
+      "visual_comparisons_analyzed": 8934,
+      "performance_optimizations_discovered": 156,
+      "cross_browser_compatibility_tests": 1247,
+      "mobile_responsive_tests": 892,
+      "accessibility_compliance_checks": 634,
+      "learning_model_version": "2.1.0",
+      "last_updated": "2024-12-15T10:30:00Z"
+    }
+  }
+}

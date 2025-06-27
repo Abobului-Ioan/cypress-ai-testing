@@ -1,0 +1,88 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Cypress
+cypress/screenshots/
+cypress/videos/
+cypress/downloads/
+cypress/reports/healing/*.json
+
+# Keep baseline directories but ignore actual images
+cypress/screenshots/visual-baselines/
+cypress/screenshots/visual-diffs/
+cypress/screenshots/element-baselines/
+cypress/screenshots/element-diffs/
+cypress/screenshots/smart-baselines/
+cypress/screenshots/smart-diffs/
+cypress/screenshots/browser-baselines/
+cypress/screenshots/browser-diffs/
+cypress/screenshots/responsive-baselines/
+cypress/screenshots/responsive-diffs/
+
+# But keep directory structure
+!cypress/screenshots/.gitkeep
+!cypress/reports/.gitkeep
+!cypress/reports/healing/.gitkeep
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+.nyc_output
+
+# Dependency directories
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# AI model files (too large for git)
+cypress/support/ai/models/*.pb
+cypress/support/ai/models/*.json
+
+# Temporary files
+tmp/
+temp/

@@ -1,0 +1,40 @@
+{
+  "name": "cypress-ai-testing-framework",
+  "version": "1.0.0",
+  "description": "AI-Enhanced Visual Testing & Self-Healing Framework for Cypress",
+  "main": "index.js",
+  "scripts": {
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "test": "cypress run",
+    "test:headed": "cypress run --headed",
+    "test:chrome": "cypress run --browser chrome",
+    "test:visual": "cypress run --spec 'cypress/e2e/visual-regression/**/*'",
+    "test:self-healing": "cypress run --spec 'cypress/e2e/self-healing/**/*'",
+    "test:combined": "cypress run --spec 'cypress/e2e/combined/**/*'",
+    "serve-app": "cd ../qa_web_site && python -m http.server 8080",
+    "start": "concurrently \"npm run serve-app\" \"cypress open\""
+  },
+  "keywords": [
+    "cypress",
+    "testing",
+    "visual-regression",
+    "self-healing",
+    "ai",
+    "tensorflow",
+    "e2e"
+  ],
+  "author": "Cypress AI Testing Team",
+  "license": "MIT",
+  "devDependencies": {
+    "cypress": "^13.17.0",
+    "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "pixelmatch": "^5.3.0",
+    "pngjs": "^7.0.0",
+    "@tensorflow/tfjs": "^4.15.0",
+    "crypto-js": "^4.2.0",
+    "localforage": "^1.10.0"
+  }
+}
