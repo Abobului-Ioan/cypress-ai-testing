@@ -8,19 +8,51 @@ yarn-error.log*
 cypress/screenshots/
 cypress/videos/
 cypress/downloads/
-cypress/reports/healing/*.json
+# Exclude all healing reports but keep directory structure
+cypress/reports/healing/*
 
-# Keep baseline directories but ignore actual images
-cypress/screenshots/visual-baselines/
-cypress/screenshots/visual-diffs/
-cypress/screenshots/element-baselines/
-cypress/screenshots/element-diffs/
-cypress/screenshots/smart-baselines/
-cypress/screenshots/smart-diffs/
-cypress/screenshots/browser-baselines/
-cypress/screenshots/browser-diffs/
-cypress/screenshots/responsive-baselines/
-cypress/screenshots/responsive-diffs/
+# Keep baseline directories but ignore actual images for all visual tests
+# This now correctly ignores image files within the baseline directories
+cypress/screenshots/visual-baselines/**/*.png
+cypress/screenshots/visual-baselines/**/*.jpeg
+cypress/screenshots/visual-baselines/**/*.jpg
+
+cypress/screenshots/visual-diffs/**/*.png
+cypress/screenshots/visual-diffs/**/*.jpeg
+cypress/screenshots/visual-diffs/**/*.jpg
+
+cypress/screenshots/element-baselines/**/*.png
+cypress/screenshots/element-baselines/**/*.jpeg
+cypress/screenshots/element-baselines/**/*.jpg
+
+cypress/screenshots/element-diffs/**/*.png
+cypress/screenshots/element-diffs/**/*.jpeg
+cypress/screenshots/element-diffs/**/*.jpg
+
+cypress/screenshots/smart-baselines/**/*.png
+cypress/screenshots/smart-baselines/**/*.jpeg
+cypress/screenshots/smart-baselines/**/*.jpg
+
+cypress/screenshots/smart-diffs/**/*.png
+cypress/screenshots/smart-diffs/**/*.jpeg
+cypress/screenshots/smart-diffs/**/*.jpg
+
+cypress/screenshots/browser-baselines/**/*.png
+cypress/screenshots/browser-baselines/**/*.jpeg
+cypress/screenshots/browser-baselines/**/*.jpg
+
+cypress/screenshots/browser-diffs/**/*.png
+cypress/screenshots/browser-diffs/**/*.jpeg
+cypress/screenshots/browser-diffs/**/*.jpg
+
+cypress/screenshots/responsive-baselines/**/*.png
+cypress/screenshots/responsive-baselines/**/*.jpeg
+cypress/screenshots/responsive-baselines/**/*.jpg
+
+cypress/screenshots/responsive-diffs/**/*.png
+cypress/screenshots/responsive-diffs/**/*.jpeg
+cypress/screenshots/responsive-diffs/**/*.jpg
+
 
 # But keep directory structure
 !cypress/screenshots/.gitkeep
@@ -82,7 +114,3 @@ jspm_packages/
 # AI model files (too large for git)
 cypress/support/ai/models/*.pb
 cypress/support/ai/models/*.json
-
-# Temporary files
-tmp/
-temp/
