@@ -1,15 +1,13 @@
-// support/commands/ai-commands.js - FIXED Core AI functionality
+// support/commands/ai-commands.js 
 import { AIEngine } from '../ai-core/ai-engine.js';
 
 const aiEngine = new AIEngine();
 
-/**
- * FIXED: AI-Enhanced Element Finding with better error handling
- */
+
 Cypress.Commands.add('findByAI', (selector, options = {}) => {
   const { timeout = 10000, retries = 3 } = options;
   
-  // FIXED: Direct approach without problematic body queries
+
   return cy.document().then((doc) => {
     const element = doc.querySelector(selector);
     if (element) {
@@ -27,9 +25,7 @@ Cypress.Commands.add('findByAI', (selector, options = {}) => {
   });
 });
 
-/**
- * FIXED: AI-Enhanced Click with simplified approach
- */
+
 Cypress.Commands.add('clickByAI', (selector, options = {}) => {
   return cy.findByAI(selector, options).then(($element) => {
     cy.wrap($element).should('be.visible');
@@ -40,9 +36,7 @@ Cypress.Commands.add('clickByAI', (selector, options = {}) => {
   });
 });
 
-/**
- * FIXED: AI-Enhanced Navigation - simplified
- */
+
 Cypress.Commands.add('navigateByAI', (destination, options = {}) => {
   return cy.document().then((doc) => {
     // Simple approach: find by data-testid pattern first
@@ -57,13 +51,11 @@ Cypress.Commands.add('navigateByAI', (destination, options = {}) => {
   });
 });
 
-/**
- * FIXED: AI-Enhanced Wait with timeout protection
- */
+
 Cypress.Commands.add('waitForAI', (selector, options = {}) => {
   const { timeout = 10000, condition = 'visible' } = options;
   
-  // FIXED: Use document instead of body
+
   return cy.document().then((doc) => {
     const element = doc.querySelector(selector);
     if (element) {
@@ -100,15 +92,13 @@ function getAlternativeSelectors(selector) {
   return mapping[selector] ? [mapping[selector]] : [];
 }
 
-/**
- * FIXED: AI Form Fill with better field finding
- */
+
 Cypress.Commands.add('fillFormByAI', (formSelector, formData, options = {}) => {
   const { skipMissing = false } = options;
   
   return cy.get(formSelector).within(() => {
     Object.entries(formData).forEach(([fieldName, value]) => {
-      // FIXED: Use correct field name patterns from the HTML
+
       const fieldMapping = {
         'firstName': 'first-name-input',
         'lastName': 'last-name-input', 
@@ -120,8 +110,7 @@ Cypress.Commands.add('fillFormByAI', (formSelector, formData, options = {}) => {
       
       const actualFieldName = fieldMapping[fieldName] || fieldName;
       const selector = `[data-testid="${actualFieldName}"]`;
-      
-      // FIXED: Use document instead of body
+
       cy.document().then((doc) => {
         const field = doc.querySelector(selector);
         if (field) {
@@ -152,4 +141,4 @@ Cypress.Commands.add('fillFormByAI', (formSelector, formData, options = {}) => {
   });
 });
 
-console.log('🤖 FIXED AI Commands loaded successfully');
+console.log('🤖 AI Commands loaded successfully');

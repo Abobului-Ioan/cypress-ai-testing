@@ -1,4 +1,4 @@
-// support/ai-core/ai-engine.js - Fixed AI engine with proper element finding
+// support/ai-core/ai-engine.js -
 export class AIEngine {
   constructor() {
     this.cache = new Map();
@@ -9,9 +9,6 @@ export class AIEngine {
     };
   }
 
-  /**
-   * FIXED: Core element finding with proper fallback strategies
-   */
   async findElement(selector, options = {}) {
     const { document, timeout = 10000, retries = 3 } = options;
     const startTime = Date.now();
@@ -55,9 +52,6 @@ export class AIEngine {
     }
   }
 
-  /**
-   * FIXED: Handle :contains() selectors properly
-   */
   handleContainsSelector(selector, document) {
     try {
       // Extract text from contains selector
@@ -98,9 +92,7 @@ export class AIEngine {
     return null;
   }
 
-  /**
-   * FIXED: Synchronous element finding that actually works
-   */
+
   findElementSync(document, selector) {
     try {
       // Direct query first
@@ -118,9 +110,6 @@ export class AIEngine {
     }
   }
 
-  /**
-   * FIXED: Generate better fallback strategies
-   */
   generateFallbackStrategies(originalSelector) {
     const strategies = [];
     
@@ -166,9 +155,7 @@ export class AIEngine {
     return strategies.sort((a, b) => b.confidence - a.confidence);
   }
 
-  /**
-   * FIXED: Better element interaction check
-   */
+
   isElementInteractable(element) {
     if (!element) return false;
     
@@ -190,9 +177,7 @@ export class AIEngine {
     }
   }
 
-  /**
-   * FIXED: Better element condition checking
-   */
+
   checkElementCondition(element, condition) {
     if (!element) return false;
     
@@ -212,9 +197,7 @@ export class AIEngine {
     }
   }
 
-  /**
-   * FIXED: Form field detection
-   */
+ 
   detectFieldType(element) {
     const type = element.type?.toLowerCase();
     const name = element.name?.toLowerCase();
@@ -231,9 +214,7 @@ export class AIEngine {
     return 'text';
   }
 
-  /**
-   * FIXED: Field selectors generation
-   */
+
   generateFieldSelectors(fieldName) {
     return [
       { selector: `[data-testid="${fieldName}-input"]`, strategy: 'testid-input' },
@@ -245,9 +226,7 @@ export class AIEngine {
     ];
   }
 
-  /**
-   * FIXED: Navigation element finding
-   */
+ 
   findNavigationElement(document, destination) {
     // Strategy 1: Find by exact text
     let element = this.findByExactText(document, destination);

@@ -1,4 +1,4 @@
-// e2e/03-self-healing.cy.js - FIXED Self-healing test file
+// e2e/03-self-healing.cy.js 
 describe('🔧 Self-Healing Test Capabilities', () => {
   let healingResults = [];
   let sessionStartTime;
@@ -23,7 +23,6 @@ describe('🔧 Self-Healing Test Capabilities', () => {
       cy.get('[data-testid="products-grid"]', { timeout: 8000 }).should('be.visible');
       cy.wait(2000); // Let products load
       
-      // FIXED: Better product availability check with proper scoping
       cy.get('[data-testid="products-grid"]').within(() => {
         cy.get('[data-testid^="add-to-cart-"]').then(($buttons) => {
           if ($buttons.length > 0) {
@@ -56,8 +55,7 @@ describe('🔧 Self-Healing Test Capabilities', () => {
           }
         });
       });
-      
-      // FIXED: Check cart count outside the products grid scope
+
       cy.wait(1000);
       cy.get('[data-testid="nav-actions"]').within(() => {
         cy.get('[data-testid="cart-count"]', { timeout: 5000 }).should('be.visible');
@@ -89,7 +87,6 @@ describe('🔧 Self-Healing Test Capabilities', () => {
       cy.navigateByAI('Profile');
       cy.get('[data-testid="profile-form"]', { timeout: 5000 }).should('be.visible');
       
-      // FIXED: Use direct field filling instead of problematic healingFillForm
       cy.get('[data-testid="profile-form"]').within(() => {
         // Fill fields directly with healing simulation
         cy.get('[data-testid="first-name-input"]').clear().type('John');
@@ -171,8 +168,7 @@ describe('🔧 Self-Healing Test Capabilities', () => {
       });
       
       cy.wait(2000);
-      
-      // FIXED: Better selector approach for shop now button
+
       cy.get('[data-testid="shop-now-button"]', { timeout: 5000 })
         .should('be.visible')
         .click({ force: true });
@@ -221,7 +217,6 @@ describe('🔧 Self-Healing Test Capabilities', () => {
             ]
           };
           
-          // FIXED: Use recordAIOperation instead of removed saveHealingReport
           cy.task('recordAIOperation', {
             operation: 'healing-performance-analysis',
             target: 'self-healing-system',

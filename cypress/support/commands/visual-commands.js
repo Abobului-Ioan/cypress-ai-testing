@@ -1,4 +1,4 @@
-// support/commands/visual-commands.js - Fixed visual testing commands
+// support/commands/visual-commands.js 
 /**
  * AI-Enhanced Visual Testing - Intelligent visual comparison
  */

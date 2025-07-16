@@ -1,4 +1,4 @@
-// support/e2e.js - FIXED: Integration with single live report system
+// support/e2e.js 
 import './commands/ai-commands.js';
 import './commands/visual-commands.js';
 import './commands/healing-commands.js';
@@ -295,7 +295,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  // FIXED: Clean test completion reporting
+  // Clean test completion reporting
   const testTitle = Cypress.currentTest?.title || 'unknown';
   const testState = Cypress.currentTest?.state || 'unknown';
   
@@ -366,14 +366,14 @@ afterEach(() => {
 });
 
 after(() => {
-  // FIXED: Simple session completion
+  // Simple session completion
   cy.task('logAIInsight', '📊 AI Testing session completed');
   
   // Clean up old files but keep our live report
   cy.task('cleanOldReports');
 });
 
-// FIXED: Simplified command to record AI events for live report
+// Simplified command to record AI events for live report
 Cypress.Commands.add('recordAIEvent', (eventType, data) => {
   cy.get('@aiOperations').then((operations) => {
     operations.push({
@@ -392,7 +392,7 @@ Cypress.Commands.add('recordAIEvent', (eventType, data) => {
   });
 });
 
-// FIXED: Visual testing with live report integration
+// Visual testing with live report integration
 Cypress.Commands.add('matchImageSnapshot', (name, options = {}) => {
   cy.screenshot(name, { capture: 'viewport' });
   

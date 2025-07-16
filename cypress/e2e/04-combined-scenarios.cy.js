@@ -1,4 +1,4 @@
-// e2e/04-combined-scenarios.cy.js - FIXED VERSION
+// e2e/04-combined-scenarios.cy.js
 
 describe('🚀 Combined AI Testing Scenarios', () => {
   let scenarioResults = {};
@@ -74,7 +74,7 @@ describe('🚀 Combined AI Testing Scenarios', () => {
         fieldsProcessed: 2
       });
       
-      // Step 3: Add products - FIXED to check availability first
+      // Step 3: Add products 
       cy.get('body').then(($body) => {
         const availableProducts = [];
         
@@ -293,7 +293,6 @@ describe('🚀 Combined AI Testing Scenarios', () => {
         .should('be.visible')
         .click({ force: true });
       
-      // FIXED: Visual test with proper insight handling
       cy.visualTest('dashboard-with-updates', {
         threshold: 0.1,
         ignoreDynamicContent: true,
@@ -310,10 +309,8 @@ describe('🚀 Combined AI Testing Scenarios', () => {
         
         cy.task('recordVisualComparison', visualResult);
         
-        // FIXED: More lenient assertion
         expect(result.passed || result.confidence > 0.8).to.be.true;
         
-        // FIXED: Handle insights properly
         if (result.insights) {
           const insightsText = Array.isArray(result.insights) 
             ? result.insights.join(' ') 
@@ -399,7 +396,7 @@ describe('🚀 Combined AI Testing Scenarios', () => {
               break;
           }
           
-          // Wait for expected result - FIXED to use correct selectors
+          // Wait for expected result 
           if (operation.expected) {
             if (operation.expected === 'hero-section') {
               cy.get('.hero-section', { timeout: 5000 }).should('be.visible');

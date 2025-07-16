@@ -1,4 +1,4 @@
-// support/ai-core/learning-system.js - Simplified learning system
+// support/ai-core/learning-system.js 
 export class LearningSystem {
   constructor() {
     this.learningData = {
@@ -171,5 +171,4 @@ export class LearningSystem {
   }
 }
 
-// Export singleton instance
 export const learningSystem = new LearningSystem();

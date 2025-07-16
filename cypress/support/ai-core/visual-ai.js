@@ -1,4 +1,4 @@
-// support/ai-core/visual-ai.js - Simplified visual intelligence system
+// support/ai-core/visual-ai.js 
 export class VisualAI {
   constructor() {
     this.initialized = false;

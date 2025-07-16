@@ -1,4 +1,4 @@
-// cypress.config.js - FIXED: Single live HTML report with real-time updates
+// cypress.config.js 
 import { defineConfig } from 'cypress';
 import fs from 'fs';
 import path from 'path';

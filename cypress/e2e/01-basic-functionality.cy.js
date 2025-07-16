@@ -1,4 +1,4 @@
-// e2e/01-basic-functionality.cy.js - FINAL FIXED VERSION
+// e2e/01-basic-functionality.cy.js
 
 describe('🤖 AI-Enhanced Basic Functionality', () => {
   let testStartTime;
@@ -138,7 +138,7 @@ describe('🤖 AI-Enhanced Basic Functionality', () => {
       cy.get('[data-testid="products-grid"]', { timeout: 8000 }).should('be.visible');
       cy.wait(2000);
       
-      // FIXED: Better approach - separate the cart interaction from cart count check
+
       cy.get('[data-testid="products-grid"]').within(() => {
         cy.get('[data-testid^="add-to-cart-"]').first().then(($btn) => {
           if ($btn.length > 0) {
@@ -150,10 +150,10 @@ describe('🤖 AI-Enhanced Basic Functionality', () => {
         });
       });
       
-      // FIXED: Check cart count outside the products grid scope
+ 
       cy.wait(1000); // Give time for cart to update
       
-      // Now check cart count in navigation area (outside of .within() scope)
+      // check cart count in navigation area 
       cy.get('[data-testid="nav-actions"]').within(() => {
         cy.get('[data-testid="cart-count"]', { timeout: 5000 }).should('be.visible').then(($cartCount) => {
           const cartValue = $cartCount.text();
@@ -250,8 +250,7 @@ describe('🤖 AI-Enhanced Basic Functionality', () => {
       cy.get('[data-testid="profile-form"]', { timeout: 5000 }).should('be.visible');
       
       const formStart = Date.now();
-      
-      // FIXED: Completely simplified form filling without problematic cy.get('body')
+ 
       cy.get('[data-testid="profile-form"]').within(() => {
         // Fill required fields
         cy.get('[data-testid="first-name-input"]').clear().type('John');
@@ -259,7 +258,6 @@ describe('🤖 AI-Enhanced Basic Functionality', () => {
         cy.get('[data-testid="email-input"]').clear().type('john.doe@example.com');
       });
       
-      // FIXED: Handle optional field without problematic pattern
       cy.get('[data-testid="phone-input"]').then(($phone) => {
         if ($phone.length > 0) {
           cy.wrap($phone).clear().type('555-123-4567');
@@ -294,7 +292,6 @@ describe('🤖 AI-Enhanced Basic Functionality', () => {
     it('should gracefully handle element failures and recover', () => {
       cy.task('logAIInsight', '🛡️ Testing Error Recovery');
       
-      // FIXED: Proper error handling without .catch() which doesn't work in Cypress
       let errorHandled = false;
       
       // Set up error handling first

@@ -1,7 +1,7 @@
-// support/commands/healing-commands.js - FIXED VERSION
+// support/commands/healing-commands.js 
 
 /**
- * FIXED: Self-Healing Form Fill with proper field finding
+ *  Self-Healing Form Fill with proper field finding
  */
 Cypress.Commands.add('healingFillForm', (formSelector, formData, options = {}) => {
   const { 
@@ -12,7 +12,7 @@ Cypress.Commands.add('healingFillForm', (formSelector, formData, options = {}) =
   
   return cy.get(formSelector).within(() => {
     Object.entries(formData).forEach(([fieldName, value]) => {
-      // FIXED: Use correct field mapping from the actual HTML
+      // Use correct field mapping from the actual HTML
       const fieldMapping = {
         'firstName': '[data-testid="first-name-input"]',
         'lastName': '[data-testid="last-name-input"]', 
@@ -82,7 +82,7 @@ Cypress.Commands.add('healingFillForm', (formSelector, formData, options = {}) =
 });
 
 /**
- * FIXED: Self-Healing Click with better error handling
+ * Self-Healing Click with better error handling
  */
 Cypress.Commands.add('healingClick', (selector, options = {}) => {
   const {
@@ -148,7 +148,7 @@ Cypress.Commands.add('healingClick', (selector, options = {}) => {
 });
 
 /**
- * FIXED: Adaptive Navigation with better fallbacks
+ * Adaptive Navigation with better fallbacks
  */
 Cypress.Commands.add('healingNavigate', (targetText, options = {}) => {
   const { timeout = 10000 } = options;
@@ -193,7 +193,7 @@ Cypress.Commands.add('healingNavigate', (targetText, options = {}) => {
   }
 });
 
-// Helper Functions - FIXED
+// Helper Functions 
 
 function generateHealingStrategies(originalSelector) {
   const strategies = [];
@@ -262,4 +262,4 @@ function fillFieldByType($field, fieldType, value) {
   }
 }
 
-console.log('🔧 FIXED Self-Healing Commands loaded successfully');
+console.log('🔧 Self-Healing Commands loaded successfully');
